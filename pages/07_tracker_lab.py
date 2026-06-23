@@ -6,7 +6,21 @@ from components.ui_helpers import init_state, render_navigation, render_page_hea
 init_state()
 render_page_header(7)
 
-st.header("Log a Run")
+st.info(
+    "This is a simulated experiment tracker. It does not call a real model, send prompts to an API, "
+    "store secrets, or measure live token usage. The numbers you enter are teaching values so you "
+    "can practice the tracking workflow safely."
+)
+
+with st.expander("Why this lab does not ask for an API key", expanded=True):
+    st.write(
+        "Putting API keys into a teaching app is a poor default habit. In real projects, keys "
+        "belong in environment variables, secret managers, or Streamlit secrets, not in regular "
+        "text boxes. This lab focuses on the engineering discipline of tracking experiments "
+        "without asking learners to expose credentials."
+    )
+
+st.header("Log a Simulated Run")
 
 with st.form("run_form"):
     col1, col2, col3 = st.columns(3)
@@ -38,7 +52,7 @@ if submitted:
     )
     st.success(f"Logged {run_name}.")
 
-st.header("Run Table")
+st.header("Simulated Run Table")
 st.dataframe(st.session_state.tracker_runs, hide_index=True, use_container_width=True)
 
 st.header("Compare Runs")
@@ -63,5 +77,43 @@ with st.expander("What this lab is teaching", expanded=True):
         "The best run depends on the decision rule. Production AI engineering is often a tradeoff "
         "between quality, latency, cost, reliability, and operational complexity."
     )
+
+st.header("Offline Practice: Run a Real Experiment Safely")
+st.write(
+    "Try this outside the app using any model interface you already have access to. Do not paste "
+    "an API key here. The goal is to practice tracking, not credential handling."
+)
+
+st.subheader("Experiment prompt")
+st.write(
+    "Ask the same model to answer the same question three times, changing only the prompt style."
+)
+
+practice_rows = [
+    {
+        "Run": "A",
+        "Change one thing": "Direct prompt",
+        "Record": "Answer quality, latency you observed, notable mistakes",
+    },
+    {
+        "Run": "B",
+        "Change one thing": "Prompt with explicit rubric",
+        "Record": "Whether the answer follows the rubric better",
+    },
+    {
+        "Run": "C",
+        "Change one thing": "Prompt with required output format",
+        "Record": "Whether structure improves or content gets worse",
+    },
+]
+st.dataframe(practice_rows, hide_index=True, use_container_width=True)
+
+with st.expander("What to write down after the offline experiment", expanded=True):
+    st.markdown("- The exact prompt version you used")
+    st.markdown("- The response you received")
+    st.markdown("- Your quality score and why you gave it")
+    st.markdown("- Approximate latency if you observed it")
+    st.markdown("- Any cost information the external tool already shows you")
+    st.markdown("- Which run you would keep and what you would try next")
 
 render_navigation(7)
